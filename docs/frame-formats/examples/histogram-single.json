@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Histogram Single",
+    "fields": [
+      {
+        "name": "BucketMin",
+        "type": "number",
+        "values": [0, 33333.333333333336, 66666.66666666667]
+      },
+      {
+        "name": "BucketMax",
+        "type": "number",
+        "values": [33333.333333333336, 66666.66666666667, 100000]
+      },
+      {
+        "name": "receiveBytesPerSecond",
+        "type": "number",
+        "values": [413, 59, 89]
+      }
+    ]
+  }
+]

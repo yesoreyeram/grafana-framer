@@ -1,0 +1,17 @@
+{
+  "name": "grafana-framer",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "spellcheck": "cspell -c cspell.config.json \"**/*.{ts,tsx,js,go,md,mdx,yml,yaml,json,scss,css}\"",
+    "test": "go test -v ./..."
+  },
+  "keywords": [],
+  "author": "Sriramajeyam Sugumaran",
+  "license": "Apache-2.0",
+  "dependencies": {},
+  "devDependencies": {
+    "cspell": "^6.1.2"
+  }
+}

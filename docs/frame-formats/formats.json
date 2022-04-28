@@ -1,0 +1,78 @@
+[
+  {
+    "name": "No Data",
+    "url": "https://raw.githubusercontent.com/yesoreyeram/grafana-framer/main/docs/frame-formats/examples/no-data.json"
+  },
+  {
+    "name": "Empty Frame",
+    "url": "https://raw.githubusercontent.com/yesoreyeram/grafana-framer/main/docs/frame-formats/examples/empty-frame.json"
+  },
+  {
+    "name": "Long Frame",
+    "url": "https://raw.githubusercontent.com/yesoreyeram/grafana-framer/main/docs/frame-formats/examples/long-frame.json"
+  },
+  {
+    "name": "Wide Frame",
+    "url": "https://raw.githubusercontent.com/yesoreyeram/grafana-framer/main/docs/frame-formats/examples/wide-frame.json"
+  },
+  {
+    "name": "Multi Frame",
+    "url": "https://raw.githubusercontent.com/yesoreyeram/grafana-framer/main/docs/frame-formats/examples/multi-frame.json"
+  },
+  {
+    "name": "Multi Frame with exemplars",
+    "url": "https://raw.githubusercontent.com/yesoreyeram/grafana-framer/main/docs/frame-formats/examples/multi-frame-with-exemplar.json"
+  },
+  {
+    "name": "Frame without time field",
+    "url": "https://raw.githubusercontent.com/yesoreyeram/grafana-framer/main/docs/frame-formats/examples/frame-without-time-field.json"
+  },
+  {
+    "name": "Frame without time and numeric field",
+    "url": "https://raw.githubusercontent.com/yesoreyeram/grafana-framer/main/docs/frame-formats/examples/frame-without-time-numeric-field.json"
+  },
+  {
+    "name": "Histogram - Single",
+    "url": "https://raw.githubusercontent.com/yesoreyeram/grafana-framer/main/docs/frame-formats/examples/histogram-single.json"
+  },
+  {
+    "name": "Histogram - Multi Values",
+    "url": "https://raw.githubusercontent.com/yesoreyeram/grafana-framer/main/docs/frame-formats/examples/histogram-multi.json"
+  },
+  {
+    "name": "Histogram - Multi Frame",
+    "url": "https://raw.githubusercontent.com/yesoreyeram/grafana-framer/main/docs/frame-formats/examples/histogram-multi-frame.json"
+  },
+  {
+    "name": "Logs",
+    "url": "https://raw.githubusercontent.com/yesoreyeram/grafana-framer/main/docs/frame-formats/examples/logs.json"
+  },
+  {
+    "name": "Node Graph",
+    "url": "https://raw.githubusercontent.com/yesoreyeram/grafana-framer/main/docs/frame-formats/examples/node-graph.json"
+  },
+  {
+    "name": "Geo Map",
+    "url": "https://raw.githubusercontent.com/yesoreyeram/grafana-framer/main/docs/frame-formats/examples/geo-map.json"
+  },
+  {
+    "name": "Heat Map",
+    "url": "https://raw.githubusercontent.com/yesoreyeram/grafana-framer/main/docs/frame-formats/examples/heatmap.json"
+  },
+  {
+    "name": "OHLC Candle Stick",
+    "url": "https://raw.githubusercontent.com/yesoreyeram/grafana-framer/main/docs/frame-formats/examples/ohlc-candlestick.json"
+  },
+  {
+    "name": "JSON field Types",
+    "url": "https://raw.githubusercontent.com/yesoreyeram/grafana-framer/main/docs/frame-formats/examples/json-types.json"
+  },
+  {
+    "name": "Legacy - Table",
+    "url": "https://raw.githubusercontent.com/yesoreyeram/grafana-framer/main/docs/frame-formats/examples/legacy-table.json"
+  },
+  {
+    "name": "Legacy - Timeseries",
+    "url": "https://raw.githubusercontent.com/yesoreyeram/grafana-framer/main/docs/frame-formats/examples/legacy-timeseries.json"
+  }
+]

@@ -1,0 +1,18 @@
+[
+  {
+    "name": "infra Stats",
+    "fields": [
+      {
+        "name": "started",
+        "type": "time",
+        "values": [1635319376502, 1635319376502, 1635319796502, 1635319796502]
+      },
+      { "name": "cpu", "type": "number", "values": [23, 40, 46, 38] },
+      {
+        "name": "server",
+        "type": "string",
+        "values": ["Server A", "Server B", "Server A", "Server B"]
+      }
+    ]
+  }
+]

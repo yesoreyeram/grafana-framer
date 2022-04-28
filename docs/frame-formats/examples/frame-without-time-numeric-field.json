@@ -1,0 +1,8 @@
+[
+  {
+    "name": "Infra Stats",
+    "fields": [
+      { "name": "name", "type": "string", "values": ["Server A", "Server B"] }
+    ]
+  }
+]

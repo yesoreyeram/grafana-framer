@@ -1,0 +1,16 @@
+[
+  {
+    "name": "response",
+    "fields": [
+      { "name": "user", "type": "string", "values": ["foo", "bar"] },
+      {
+        "name": "userProps",
+        "type": "json",
+        "values": [
+          { "age": 20, "gender": "m" },
+          { "age": 30, "gender": "f" }
+        ]
+      }
+    ]
+  }
+]

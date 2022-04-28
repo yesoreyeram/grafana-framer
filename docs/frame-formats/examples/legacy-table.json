@@ -1,0 +1,16 @@
+[
+  {
+    "type": "table",
+    "columns": [
+      { "text": "Time", "type": "time" },
+      { "text": "Server", "type": "string" },
+      { "text": "CPU", "type": "number" }
+    ],
+    "rows": [
+      [1635319376502, "Server A", 23],
+      [1635319376502, "Server B", 40],
+      [1635319796502, "Server A", 46],
+      [1635319796502, "Server B", 38]
+    ]
+  }
+]

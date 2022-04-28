@@ -1,0 +1,27 @@
+[
+  {
+    "name": "infra Stats",
+    "fields": [
+      {
+        "name": "started",
+        "type": "time",
+        "values": [1635319376502, 1635319376502, 1635319796502, 1635319796502]
+      },
+      {
+        "name": "server",
+        "type": "string",
+        "values": [
+          "Server A started",
+          "Server B started",
+          "Server A shutdown",
+          "Server B shutdown"
+        ]
+      },
+      {
+        "name": "level",
+        "type": "string",
+        "values": ["info", "info", "error", "warn"]
+      }
+    ]
+  }
+]

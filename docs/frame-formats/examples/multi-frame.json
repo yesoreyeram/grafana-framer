@@ -1,0 +1,24 @@
+[
+  {
+    "name": "serverA",
+    "fields": [
+      { "name": "cpu", "type": "number", "values": [23, 46] },
+      {
+        "name": "started",
+        "type": "time",
+        "values": [1635319376502, 1635319796502]
+      }
+    ]
+  },
+  {
+    "name": "serverB",
+    "fields": [
+      { "name": "cpu", "type": "number", "values": [40, 38] },
+      {
+        "name": "started",
+        "type": "time",
+        "values": [1635319376502, 1635319796502]
+      }
+    ]
+  }
+]

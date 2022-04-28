@@ -1,0 +1,26 @@
+{
+  "language": "en",
+  "ignorePaths": [
+    "node_modules/**",
+    "dist/**"
+  ],
+  "words": [
+    "boldn",
+    "bolup",
+    "datapoints",
+    "datasource",
+    "fullname",
+    "gframer",
+    "gjson",
+    "grafana",
+    "ohlc",
+    "Sriramajeyam",
+    "stretchr",
+    "structs",
+    "Sugumaran",
+    "testdata",
+    "tidwall",
+    "timeseries",
+    "yesoreyeram"
+  ]
+}

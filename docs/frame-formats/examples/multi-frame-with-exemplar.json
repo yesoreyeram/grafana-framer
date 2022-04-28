@@ -1,0 +1,120 @@
+[
+  {
+    "name": "Server A",
+    "fields": [
+      {
+        "name": "Time",
+        "type": "time",
+        "values": [1635319376502, 1635319656502, 1635319796502]
+      },
+      {
+        "name": "CPU",
+        "type": "number",
+        "values": [60, 74, 94]
+      }
+    ]
+  },
+  {
+    "name": "Server B",
+    "fields": [
+      {
+        "name": "Time",
+        "type": "time",
+        "values": [1635319376502, 1635319656502, 1635319796502]
+      },
+      {
+        "name": "CPU",
+        "type": "number",
+        "values": [30, 64, 34]
+      }
+    ]
+  },
+  {
+    "name": "cpu exemplar",
+    "meta": {
+      "dataTopic": "annotations"
+    },
+    "fields": [
+      {
+        "name": "Time",
+        "type": "time",
+        "values": [1635319356502, 1635319456502, 1635319606502]
+      },
+      {
+        "name": "Value",
+        "type": "number",
+        "values": [70, 12, 90]
+      },
+      {
+        "name": "Server Name",
+        "type": "string",
+        "values": ["Server A", "Server B", "Server A"]
+      },
+      {
+        "name": "traceID",
+        "type": "string",
+        "config": {
+          "links": [
+            {
+              "title": "Query with Tempo",
+              "url": "",
+              "internal": {
+                "query": {
+                  "query": "${__value.raw}",
+                  "queryType": "traceId"
+                },
+                "datasourceUid": "xyz1234abc",
+                "datasourceName": "Tempo"
+              }
+            }
+          ]
+        },
+        "values": ["39b4d1260d853487", "40b4d1260d853487", "ad6c6bb6429cbf7"]
+      }
+    ]
+  },
+  {
+    "name": "memory exemplar",
+    "meta": {
+      "dataTopic": "annotations"
+    },
+    "fields": [
+      {
+        "name": "Time",
+        "type": "time",
+        "values": [1635319436502, 1635319476502, 1635319626502]
+      },
+      {
+        "name": "Value",
+        "type": "number",
+        "values": [70, 12, 90]
+      },
+      {
+        "name": "Server Name",
+        "type": "string",
+        "values": ["Server A", "Server B", "Server A"]
+      },
+      {
+        "name": "traceID",
+        "type": "string",
+        "config": {
+          "links": [
+            {
+              "title": "Query with Tempo",
+              "url": "",
+              "internal": {
+                "query": {
+                  "query": "${__value.raw}",
+                  "queryType": "traceId"
+                },
+                "datasourceUid": "xyz1234abc",
+                "datasourceName": "Tempo"
+              }
+            }
+          ]
+        },
+        "values": ["39b4d1260d853487", "40b4d1260d853487", "ad6c6bb6429cbf7"]
+      }
+    ]
+  }
+]
