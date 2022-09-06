@@ -4,14 +4,22 @@ import (
 	"encoding/json"
 	"errors"
 	"sort"
+	"strconv"
 	"time"
 
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 )
 
+type ColumnSelector struct {
+	Selector string
+	Alias    string
+	Type     string
+}
+
 type FramerOptions struct {
 	FrameName           string
 	ExecutedQueryString string
+	Columns             []ColumnSelector
 }
 
 func noOperation(x interface{}) {}
@@ -21,7 +29,7 @@ func ToDataFrame(input interface{}, options FramerOptions) (frame *data.Frame, e
 	case nil, string, float64, float32, int64, int32, int16, int, bool:
 		return structToFrame(options.FrameName, map[string]interface{}{options.FrameName: input}, options.ExecutedQueryString)
 	case []interface{}:
-		return sliceToFrame(options.FrameName, input.([]interface{}), options.ExecutedQueryString)
+		return sliceToFrame(options.FrameName, input.([]interface{}), options)
 	default:
 		noOperation(x)
 		return structToFrame(options.FrameName, input, options.ExecutedQueryString)
@@ -70,11 +78,11 @@ func structToFrame(name string, input interface{}, executedQueryString string) (
 	return frame, err
 }
 
-func sliceToFrame(name string, input []interface{}, executedQueryString string) (frame *data.Frame, err error) {
+func sliceToFrame(name string, input []interface{}, options FramerOptions) (frame *data.Frame, err error) {
 	frame = data.NewFrame(name)
-	if executedQueryString != "" {
+	if options.ExecutedQueryString != "" {
 		frame.Meta = &data.FrameMeta{
-			ExecutedQueryString: executedQueryString,
+			ExecutedQueryString: options.ExecutedQueryString,
 		}
 	}
 	if len(input) < 1 {
@@ -130,12 +138,80 @@ func sliceToFrame(name string, input []interface{}, executedQueryString string) 
 							frame.Fields = append(frame.Fields, field)
 						}
 						if fieldType != data.FieldTypeJSON {
-							field := data.NewFieldFromFieldType(fieldType, len(input))
-							field.Name = k
-							for i := 0; i < len(input); i++ {
-								field.Set(i, toPointer(o[i]))
+							if len(options.Columns) > 0 {
+								for _, c := range options.Columns {
+									if c.Alias == k || (c.Alias == "" && c.Selector == k) {
+										switch c.Type {
+										case "timestamp":
+											field := data.NewFieldFromFieldType(data.FieldTypeNullableTime, len(input))
+											field.Name = k
+											for i := 0; i < len(input); i++ {
+												currentValue := o[i]
+												switch currentValue.(type) {
+												case string:
+													if currentValue.(string) != "" {
+														if t, err := time.Parse(time.RFC3339, currentValue.(string)); err == nil {
+															field.Set(i, toPointer(t))
+														}
+													}
+												default:
+													field.Set(i, nil)
+												}
+											}
+											frame.Fields = append(frame.Fields, field)
+										case "timestamp_epoch":
+											field := data.NewFieldFromFieldType(data.FieldTypeNullableTime, len(input))
+											field.Name = k
+											for i := 0; i < len(input); i++ {
+												currentValue := o[i]
+												switch currentValue.(type) {
+												case string:
+													if item, err := strconv.ParseInt(currentValue.(string), 10, 64); err == nil && currentValue.(string) != "" {
+														field.Set(i, toPointer(time.UnixMilli(item)))
+													}
+												case float64:
+													field.Set(i, toPointer(time.UnixMilli(int64(currentValue.(float64)))))
+												default:
+													field.Set(i, nil)
+												}
+											}
+											frame.Fields = append(frame.Fields, field)
+										case "timestamp_epoch_s":
+											field := data.NewFieldFromFieldType(data.FieldTypeNullableTime, len(input))
+											field.Name = k
+											for i := 0; i < len(input); i++ {
+												currentValue := o[i]
+												switch currentValue.(type) {
+												case string:
+													if item, err := strconv.ParseInt(currentValue.(string), 10, 64); err == nil && currentValue.(string) != "" {
+														field.Set(i, toPointer(time.Unix(item, 0)))
+													}
+												case float64:
+													field.Set(i, toPointer(time.Unix(int64(currentValue.(float64)), 0)))
+												default:
+													field.Set(i, nil)
+												}
+											}
+											frame.Fields = append(frame.Fields, field)
+										default:
+											field := data.NewFieldFromFieldType(fieldType, len(input))
+											field.Name = k
+											for i := 0; i < len(input); i++ {
+												field.Set(i, toPointer(o[i]))
+											}
+											frame.Fields = append(frame.Fields, field)
+										}
+									}
+								}
 							}
-							frame.Fields = append(frame.Fields, field)
+							if len(options.Columns) < 1 {
+								field := data.NewFieldFromFieldType(fieldType, len(input))
+								field.Name = k
+								for i := 0; i < len(input); i++ {
+									field.Set(i, toPointer(o[i]))
+								}
+								frame.Fields = append(frame.Fields, field)
+							}
 						}
 					}
 				}
@@ -214,6 +290,9 @@ func sortedKeys(in interface{}) []string {
 }
 
 func toPointer(value interface{}) interface{} {
+	if value == nil {
+		return nil
+	}
 	switch v := value.(type) {
 	case int8:
 		return &v

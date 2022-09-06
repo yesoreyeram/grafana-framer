@@ -42,7 +42,7 @@ func JsonStringToFrame(jsonString string, options JSONFramerOptions) (frame *dat
 	if err != nil {
 		return frame, err
 	}
-	return getFrameFromResponseString(outString, options.FrameName)
+	return getFrameFromResponseString(outString, options)
 }
 
 func getColumnValuesFromResponseString(responseString string, columns []ColumnSelector) (string, error) {
@@ -58,7 +58,7 @@ func getColumnValuesFromResponseString(responseString string, columns []ColumnSe
 					if name == "" {
 						name = col.Selector
 					}
-					oi[name] = gjson.Get(value.Raw, col.Selector).Value()
+					oi[name] = convertFieldValueType(gjson.Get(value.Raw, col.Selector).Value(), col)
 				}
 				out = append(out, oi)
 				return true
@@ -71,7 +71,7 @@ func getColumnValuesFromResponseString(responseString string, columns []ColumnSe
 				if name == "" {
 					name = col.Selector
 				}
-				oi[name] = gjson.Get(result.Raw, col.Selector).Value()
+				oi[name] = convertFieldValueType(gjson.Get(result.Raw, col.Selector).Value(), col)
 			}
 			out = append(out, oi)
 		}
@@ -84,13 +84,26 @@ func getColumnValuesFromResponseString(responseString string, columns []ColumnSe
 	return responseString, nil
 }
 
-func getFrameFromResponseString(responseString string, frameName string) (frame *data.Frame, err error) {
+func getFrameFromResponseString(responseString string, options JSONFramerOptions) (frame *data.Frame, err error) {
 	var out interface{}
 	err = json.Unmarshal([]byte(responseString), &out)
 	if err != nil {
 		return frame, fmt.Errorf("error while un-marshaling response. %s", err.Error())
 	}
+	columns := []gframer.ColumnSelector{}
+	for _, c := range options.Columns {
+		columns = append(columns, gframer.ColumnSelector{
+			Alias:    c.Alias,
+			Selector: c.Selector,
+			Type:     c.Type,
+		})
+	}
 	return gframer.ToDataFrame(out, gframer.FramerOptions{
-		FrameName: frameName,
+		FrameName: options.FrameName,
+		Columns:   columns,
 	})
+}
+
+func convertFieldValueType(input interface{}, col ColumnSelector) interface{} {
+	return input
 }

@@ -123,6 +123,47 @@ func TestJsonStringToFrame(t *testing.T) {
 				{Selector: "occupation"},
 			},
 		},
+		{
+			name: "timestamp",
+			responseString: `[
+				{ "foo" : "2011-01-01T00:00:00.000Z", "bar1": 1325376000000, "baz" : true },
+				{ "foo" : "2012-01-01T00:00:00.000Z", "bar1": 1356998400000, "baz" : false }
+			]`,
+			rootSelector: "",
+			columns: []jsonFramer.ColumnSelector{
+				{Selector: "foo", Type: "timestamp"},
+				{Selector: "bar1", Alias: "bar", Type: "timestamp"},
+				{Selector: "baz", Type: "timestamp"},
+			},
+		},
+		{
+			name: "timestamp_epoch",
+			responseString: `{
+				"sss": [
+					{ "foo" : "1262304000000", "bar1": 1325376000000, "baz" : true },
+					{ "foo" : "1293840000000", "bar1": 1356998400000, "baz" : false }
+				]
+			}`,
+			rootSelector: "sss",
+			columns: []jsonFramer.ColumnSelector{
+				{Selector: "foo", Type: "timestamp_epoch"},
+				{Selector: "bar1", Alias: "bar", Type: "timestamp_epoch"},
+				{Selector: "baz", Type: "timestamp_epoch"},
+			},
+		},
+		{
+			name: "timestamp_epoch_s",
+			responseString: `[
+				{ "foo" : "1262304000", "bar1": 1325376000, "baz" : true },
+				{ "foo" : "1293840000", "bar1": 1356998400, "baz" : false }
+			]`,
+			rootSelector: "",
+			columns: []jsonFramer.ColumnSelector{
+				{Selector: "foo", Type: "timestamp_epoch_s"},
+				{Selector: "bar1", Alias: "bar", Type: "timestamp_epoch_s"},
+				{Selector: "baz", Type: "timestamp_epoch_s"},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
