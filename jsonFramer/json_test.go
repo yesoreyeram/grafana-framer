@@ -124,6 +124,21 @@ func TestJsonStringToFrame(t *testing.T) {
 			},
 		},
 		{
+			name: "number",
+			responseString: `{
+				"sss": [
+					{ "foo" : "1.2", "bar1": 4, "baz" : true },
+					{ "foo" : "3", "bar1": 5.6, "baz" : false }
+				]
+			}`,
+			rootSelector: "sss",
+			columns: []jsonFramer.ColumnSelector{
+				{Selector: "foo", Type: "number"},
+				{Selector: "bar1", Alias: "bar", Type: "number"},
+				{Selector: "baz", Type: "number"},
+			},
+		},
+		{
 			name: "timestamp",
 			responseString: `[
 				{ "foo" : "2011-01-01T00:00:00.000Z", "bar1": 1325376000000, "baz" : true },

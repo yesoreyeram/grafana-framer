@@ -142,6 +142,23 @@ func sliceToFrame(name string, input []interface{}, options FramerOptions) (fram
 								for _, c := range options.Columns {
 									if c.Alias == k || (c.Alias == "" && c.Selector == k) {
 										switch c.Type {
+										case "number":
+											field := data.NewFieldFromFieldType(data.FieldTypeNullableFloat64, len(input))
+											field.Name = k
+											for i := 0; i < len(input); i++ {
+												currentValue := o[i]
+												switch currentValue.(type) {
+												case string:
+													if item, err := strconv.ParseFloat(currentValue.(string), 64); err == nil {
+														field.Set(i, toPointer(item))
+													}
+												case float64:
+													field.Set(i, toPointer(currentValue.(float64)))
+												default:
+													field.Set(i, nil)
+												}
+											}
+											frame.Fields = append(frame.Fields, field)
 										case "timestamp":
 											field := data.NewFieldFromFieldType(data.FieldTypeNullableTime, len(input))
 											field.Name = k
