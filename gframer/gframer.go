@@ -3,6 +3,7 @@ package gframer
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"sort"
 	"strconv"
 	"time"
@@ -142,6 +143,23 @@ func sliceToFrame(name string, input []interface{}, options FramerOptions) (fram
 								for _, c := range options.Columns {
 									if c.Alias == k || (c.Alias == "" && c.Selector == k) {
 										switch c.Type {
+										case "string":
+											field := data.NewFieldFromFieldType(data.FieldTypeNullableString, len(input))
+											field.Name = k
+											for i := 0; i < len(input); i++ {
+												currentValue := o[i]
+												switch currentValue.(type) {
+												case string:
+													field.Set(i, toPointer(currentValue.(string)))
+												case float64, float32, int, int16, int32, int64, uint, uint8, uint16, uint32, uint64:
+													field.Set(i, toPointer(fmt.Sprintf("%v", currentValue)))
+												case bool:
+													field.Set(i, toPointer(fmt.Sprintf("%v", currentValue.(bool))))
+												default:
+													field.Set(i, nil)
+												}
+											}
+											frame.Fields = append(frame.Fields, field)
 										case "number":
 											field := data.NewFieldFromFieldType(data.FieldTypeNullableFloat64, len(input))
 											field.Name = k
