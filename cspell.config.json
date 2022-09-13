@@ -13,6 +13,7 @@
     "gframer",
     "gjson",
     "grafana",
+    "noborus",
     "ohlc",
     "Sriramajeyam",
     "stretchr",
@@ -21,6 +22,7 @@
     "testdata",
     "tidwall",
     "timeseries",
+    "trdsql",
     "yesoreyeram"
   ]
 }

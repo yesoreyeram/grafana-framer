@@ -11,16 +11,26 @@ import (
 	"github.com/yesoreyeram/grafana-framer/gframer"
 )
 
+type FramerType string
+
+const (
+	FramerTypeGJSON   FramerType = "gjson"
+	FramerTypeSQLite3 FramerType = "sqlite3"
+)
+
 type JSONFramerOptions struct {
+	FramerType   FramerType // `gjson` | `sqlite3`
+	SQLite3Query string
 	FrameName    string
 	RootSelector string
 	Columns      []ColumnSelector
 }
 
 type ColumnSelector struct {
-	Selector string
-	Alias    string
-	Type     string
+	Selector   string
+	Alias      string
+	Type       string
+	TimeFormat string
 }
 
 func JsonStringToFrame(jsonString string, options JSONFramerOptions) (frame *data.Frame, err error) {
@@ -38,9 +48,18 @@ func JsonStringToFrame(jsonString string, options JSONFramerOptions) (frame *dat
 		}
 		outString = r.String()
 	}
-	outString, err = getColumnValuesFromResponseString(outString, options.Columns)
-	if err != nil {
-		return frame, err
+	switch options.FramerType {
+	case "sqlite3":
+		outString, err = QueryJSONUsingSQLite3(outString, options.SQLite3Query, options.RootSelector)
+		if err != nil {
+			return frame, err
+		}
+		return getFrameFromResponseString(outString, options)
+	default:
+		outString, err = getColumnValuesFromResponseString(outString, options.Columns)
+		if err != nil {
+			return frame, err
+		}
 	}
 	return getFrameFromResponseString(outString, options)
 }
@@ -93,9 +112,10 @@ func getFrameFromResponseString(responseString string, options JSONFramerOptions
 	columns := []gframer.ColumnSelector{}
 	for _, c := range options.Columns {
 		columns = append(columns, gframer.ColumnSelector{
-			Alias:    c.Alias,
-			Selector: c.Selector,
-			Type:     c.Type,
+			Alias:      c.Alias,
+			Selector:   c.Selector,
+			Type:       c.Type,
+			TimeFormat: c.TimeFormat,
 		})
 	}
 	return gframer.ToDataFrame(out, gframer.FramerOptions{

@@ -12,9 +12,10 @@ import (
 )
 
 type ColumnSelector struct {
-	Selector string
-	Alias    string
-	Type     string
+	Selector   string
+	Alias      string
+	Type       string
+	TimeFormat string
 }
 
 type FramerOptions struct {
@@ -182,14 +183,25 @@ func sliceToFrame(name string, input []interface{}, options FramerOptions) (fram
 											field.Name = k
 											for i := 0; i < len(input); i++ {
 												currentValue := o[i]
-												switch currentValue.(type) {
+												switch a := currentValue.(type) {
+												case float64:
+													if v := fmt.Sprintf("%v", currentValue); v != "" {
+														if t, err := time.Parse("2006", v); err == nil {
+															field.Set(i, toPointer(t))
+														}
+													}
 												case string:
 													if currentValue.(string) != "" {
-														if t, err := time.Parse(time.RFC3339, currentValue.(string)); err == nil {
+														timeFormat := c.TimeFormat
+														if timeFormat == "" {
+															timeFormat = time.RFC3339
+														}
+														if t, err := time.Parse(timeFormat, currentValue.(string)); err == nil {
 															field.Set(i, toPointer(t))
 														}
 													}
 												default:
+													noOperation(a)
 													field.Set(i, nil)
 												}
 											}
