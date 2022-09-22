@@ -41,13 +41,6 @@ func JsonStringToFrame(jsonString string, options JSONFramerOptions) (frame *dat
 		return frame, errors.New("invalid json response received")
 	}
 	outString := jsonString
-	if options.RootSelector != "" {
-		r := gjson.Get(string(jsonString), options.RootSelector)
-		if !r.Exists() {
-			return frame, errors.New("root object doesn't exist in the response. Root selector:" + options.RootSelector)
-		}
-		outString = r.String()
-	}
 	switch options.FramerType {
 	case "sqlite3":
 		outString, err = QueryJSONUsingSQLite3(outString, options.SQLite3Query, options.RootSelector)
@@ -56,6 +49,13 @@ func JsonStringToFrame(jsonString string, options JSONFramerOptions) (frame *dat
 		}
 		return getFrameFromResponseString(outString, options)
 	default:
+		if options.RootSelector != "" {
+			r := gjson.Get(string(jsonString), options.RootSelector)
+			if !r.Exists() {
+				return frame, errors.New("root object doesn't exist in the response. Root selector:" + options.RootSelector)
+			}
+			outString = r.String()
+		}
 		outString, err = getColumnValuesFromResponseString(outString, options.Columns)
 		if err != nil {
 			return frame, err
