@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/grafana/grafana-plugin-sdk-go/data"
+	"github.com/yesoreyeram/grafana-framer/framerUtils"
 )
 
 type ColumnSelector struct {
@@ -54,7 +55,7 @@ func structToFrame(name string, input interface{}, executedQueryString string) (
 				a, b := getFieldTypeAndValue(value)
 				field := data.NewFieldFromFieldType(a, 1)
 				field.Name = key
-				field.Set(0, toPointer(b))
+				field.Set(0, ToPointer(b))
 				fields[key] = field
 			default:
 				fieldType, b := getFieldTypeAndValue(value)
@@ -64,7 +65,7 @@ func structToFrame(name string, input interface{}, executedQueryString string) (
 				field := data.NewFieldFromFieldType(fieldType, 1)
 				field.Name = key
 				if o, err := json.Marshal(b); err == nil {
-					field.Set(0, toPointer(string(o)))
+					field.Set(0, ToPointer(string(o)))
 					fields[key] = field
 				}
 			}
@@ -98,7 +99,7 @@ func sliceToFrame(name string, input []interface{}, options FramerOptions) (fram
 				field := data.NewFieldFromFieldType(a, len(input))
 				field.Name = name
 				for idx, i := range input {
-					field.Set(idx, toPointer(i))
+					field.Set(idx, ToPointer(i))
 				}
 				frame.Fields = append(frame.Fields, field)
 			case []interface{}:
@@ -106,7 +107,7 @@ func sliceToFrame(name string, input []interface{}, options FramerOptions) (fram
 				field.Name = name
 				for idx, i := range input {
 					if o, err := json.Marshal(i); err == nil {
-						field.Set(idx, toPointer(string(o)))
+						field.Set(idx, ToPointer(string(o)))
 					}
 				}
 				frame.Fields = append(frame.Fields, field)
@@ -134,7 +135,7 @@ func sliceToFrame(name string, input []interface{}, options FramerOptions) (fram
 							field.Name = k
 							for i := 0; i < len(input); i++ {
 								if o, err := json.Marshal(o[i]); err == nil {
-									field.Set(i, toPointer(string(o)))
+									field.Set(i, ToPointer(string(o)))
 								}
 							}
 							frame.Fields = append(frame.Fields, field)
@@ -149,14 +150,15 @@ func sliceToFrame(name string, input []interface{}, options FramerOptions) (fram
 											field.Name = k
 											for i := 0; i < len(input); i++ {
 												currentValue := o[i]
-												switch currentValue.(type) {
+												switch cvt := currentValue.(type) {
 												case string:
-													field.Set(i, toPointer(currentValue.(string)))
+													field.Set(i, ToPointer(currentValue.(string)))
 												case float64, float32, int, int16, int32, int64, uint, uint8, uint16, uint32, uint64:
-													field.Set(i, toPointer(fmt.Sprintf("%v", currentValue)))
+													field.Set(i, ToPointer(fmt.Sprintf("%v", currentValue)))
 												case bool:
-													field.Set(i, toPointer(fmt.Sprintf("%v", currentValue.(bool))))
+													field.Set(i, ToPointer(fmt.Sprintf("%v", currentValue.(bool))))
 												default:
+													noOperation(cvt)
 													field.Set(i, nil)
 												}
 											}
@@ -166,14 +168,15 @@ func sliceToFrame(name string, input []interface{}, options FramerOptions) (fram
 											field.Name = k
 											for i := 0; i < len(input); i++ {
 												currentValue := o[i]
-												switch currentValue.(type) {
+												switch cvt := currentValue.(type) {
 												case string:
 													if item, err := strconv.ParseFloat(currentValue.(string), 64); err == nil {
-														field.Set(i, toPointer(item))
+														field.Set(i, ToPointer(item))
 													}
 												case float64:
-													field.Set(i, toPointer(currentValue.(float64)))
+													field.Set(i, ToPointer(currentValue.(float64)))
 												default:
+													noOperation(cvt)
 													field.Set(i, nil)
 												}
 											}
@@ -187,18 +190,12 @@ func sliceToFrame(name string, input []interface{}, options FramerOptions) (fram
 												case float64:
 													if v := fmt.Sprintf("%v", currentValue); v != "" {
 														if t, err := time.Parse("2006", v); err == nil {
-															field.Set(i, toPointer(t))
+															field.Set(i, ToPointer(t))
 														}
 													}
 												case string:
 													if currentValue.(string) != "" {
-														timeFormat := c.TimeFormat
-														if timeFormat == "" {
-															timeFormat = time.RFC3339
-														}
-														if t, err := time.Parse(timeFormat, currentValue.(string)); err == nil {
-															field.Set(i, toPointer(t))
-														}
+														field.Set(i, framerUtils.GetTimeFromString(currentValue.(string), c.TimeFormat))
 													}
 												default:
 													noOperation(a)
@@ -211,14 +208,15 @@ func sliceToFrame(name string, input []interface{}, options FramerOptions) (fram
 											field.Name = k
 											for i := 0; i < len(input); i++ {
 												currentValue := o[i]
-												switch currentValue.(type) {
+												switch cvt := currentValue.(type) {
 												case string:
 													if item, err := strconv.ParseInt(currentValue.(string), 10, 64); err == nil && currentValue.(string) != "" {
-														field.Set(i, toPointer(time.UnixMilli(item)))
+														field.Set(i, ToPointer(time.UnixMilli(item)))
 													}
 												case float64:
-													field.Set(i, toPointer(time.UnixMilli(int64(currentValue.(float64)))))
+													field.Set(i, ToPointer(time.UnixMilli(int64(currentValue.(float64)))))
 												default:
+													noOperation(cvt)
 													field.Set(i, nil)
 												}
 											}
@@ -228,14 +226,15 @@ func sliceToFrame(name string, input []interface{}, options FramerOptions) (fram
 											field.Name = k
 											for i := 0; i < len(input); i++ {
 												currentValue := o[i]
-												switch currentValue.(type) {
+												switch cvt := currentValue.(type) {
 												case string:
 													if item, err := strconv.ParseInt(currentValue.(string), 10, 64); err == nil && currentValue.(string) != "" {
-														field.Set(i, toPointer(time.Unix(item, 0)))
+														field.Set(i, ToPointer(time.Unix(item, 0)))
 													}
 												case float64:
-													field.Set(i, toPointer(time.Unix(int64(currentValue.(float64)), 0)))
+													field.Set(i, ToPointer(time.Unix(int64(currentValue.(float64)), 0)))
 												default:
+													noOperation(cvt)
 													field.Set(i, nil)
 												}
 											}
@@ -244,7 +243,7 @@ func sliceToFrame(name string, input []interface{}, options FramerOptions) (fram
 											field := data.NewFieldFromFieldType(fieldType, len(input))
 											field.Name = k
 											for i := 0; i < len(input); i++ {
-												field.Set(i, toPointer(o[i]))
+												field.Set(i, ToPointer(o[i]))
 											}
 											frame.Fields = append(frame.Fields, field)
 										}
@@ -255,7 +254,7 @@ func sliceToFrame(name string, input []interface{}, options FramerOptions) (fram
 								field := data.NewFieldFromFieldType(fieldType, len(input))
 								field.Name = k
 								for i := 0; i < len(input); i++ {
-									field.Set(i, toPointer(o[i]))
+									field.Set(i, ToPointer(o[i]))
 								}
 								frame.Fields = append(frame.Fields, field)
 							}
@@ -336,7 +335,7 @@ func sortedKeys(in interface{}) []string {
 	return []string{}
 }
 
-func toPointer(value interface{}) interface{} {
+func ToPointer(value interface{}) interface{} {
 	if value == nil {
 		return nil
 	}
