@@ -19,8 +19,7 @@ func TestToDataFrame(t *testing.T) {
 		gotFrame, err := gframer.ToDataFrame(input, options)
 		require.Nil(t, err)
 		require.NotNil(t, gotFrame)
-		err = experimental.CheckGoldenFrame("testdata/structs/"+strings.ReplaceAll(t.Name(), "TestToDataFrame/", "")+".golden.txt", gotFrame, updateGoldenText)
-		require.Nil(t, err)
+		experimental.CheckGoldenJSONFrame(t, "testdata", "structs/"+strings.ReplaceAll(t.Name(), "TestToDataFrame/", ""), gotFrame, updateGoldenText)
 	})
 	t.Run("string", func(t *testing.T) {
 		input := `foo`
@@ -28,7 +27,7 @@ func TestToDataFrame(t *testing.T) {
 		gotFrame, err := gframer.ToDataFrame(input, options)
 		require.Nil(t, err)
 		require.NotNil(t, gotFrame)
-		err = experimental.CheckGoldenFrame("testdata/structs/"+strings.ReplaceAll(t.Name(), "TestToDataFrame/", "")+".golden.txt", gotFrame, updateGoldenText)
+		experimental.CheckGoldenJSONFrame(t, "testdata", "structs/"+strings.ReplaceAll(t.Name(), "TestToDataFrame/", ""), gotFrame, updateGoldenText)
 		require.Nil(t, err)
 	})
 	t.Run("integer", func(t *testing.T) {
@@ -37,8 +36,7 @@ func TestToDataFrame(t *testing.T) {
 		gotFrame, err := gframer.ToDataFrame(input, options)
 		require.Nil(t, err)
 		require.NotNil(t, gotFrame)
-		err = experimental.CheckGoldenFrame("testdata/structs/"+strings.ReplaceAll(t.Name(), "TestToDataFrame/", "")+".golden.txt", gotFrame, updateGoldenText)
-		require.Nil(t, err)
+		experimental.CheckGoldenJSONFrame(t, "testdata", "structs/"+strings.ReplaceAll(t.Name(), "TestToDataFrame/", ""), gotFrame, updateGoldenText)
 	})
 	t.Run("float", func(t *testing.T) {
 		input := 21.43
@@ -46,8 +44,7 @@ func TestToDataFrame(t *testing.T) {
 		gotFrame, err := gframer.ToDataFrame(input, options)
 		require.Nil(t, err)
 		require.NotNil(t, gotFrame)
-		err = experimental.CheckGoldenFrame("testdata/structs/"+strings.ReplaceAll(t.Name(), "TestToDataFrame/", "")+".golden.txt", gotFrame, updateGoldenText)
-		require.Nil(t, err)
+		experimental.CheckGoldenJSONFrame(t, "testdata", "structs/"+strings.ReplaceAll(t.Name(), "TestToDataFrame/", ""), gotFrame, updateGoldenText)
 	})
 	t.Run("bool", func(t *testing.T) {
 		input := true
@@ -55,8 +52,7 @@ func TestToDataFrame(t *testing.T) {
 		gotFrame, err := gframer.ToDataFrame(input, options)
 		require.Nil(t, err)
 		require.NotNil(t, gotFrame)
-		err = experimental.CheckGoldenFrame("testdata/structs/"+strings.ReplaceAll(t.Name(), "TestToDataFrame/", "")+".golden.txt", gotFrame, updateGoldenText)
-		require.Nil(t, err)
+		experimental.CheckGoldenJSONFrame(t, "testdata", "structs/"+strings.ReplaceAll(t.Name(), "TestToDataFrame/", ""), gotFrame, updateGoldenText)
 	})
 	t.Run("object", func(t *testing.T) {
 		input := `{ "name":"foo", "age": 12, "hobbies":["cricket","music"], "isPrimeUser": true, "fullname": { "first": "foo", "last":"bar" } }`
@@ -67,8 +63,7 @@ func TestToDataFrame(t *testing.T) {
 		gotFrame, err := gframer.ToDataFrame(out, options)
 		require.Nil(t, err)
 		require.NotNil(t, gotFrame)
-		err = experimental.CheckGoldenFrame("testdata/structs/"+strings.ReplaceAll(t.Name(), "TestToDataFrame/", "")+".golden.txt", gotFrame, updateGoldenText)
-		require.Nil(t, err)
+		experimental.CheckGoldenJSONFrame(t, "testdata", "structs/"+strings.ReplaceAll(t.Name(), "TestToDataFrame/", ""), gotFrame, updateGoldenText)
 	})
 	t.Run("string-array", func(t *testing.T) {
 		input := `["foo","bar"]`
@@ -79,8 +74,7 @@ func TestToDataFrame(t *testing.T) {
 		gotFrame, err := gframer.ToDataFrame(out, options)
 		require.Nil(t, err)
 		require.NotNil(t, gotFrame)
-		err = experimental.CheckGoldenFrame("testdata/structs/"+strings.ReplaceAll(t.Name(), "TestToDataFrame/", "")+".golden.txt", gotFrame, updateGoldenText)
-		require.Nil(t, err)
+		experimental.CheckGoldenJSONFrame(t, "testdata", "structs/"+strings.ReplaceAll(t.Name(), "TestToDataFrame/", ""), gotFrame, updateGoldenText)
 	})
 	t.Run("number-array", func(t *testing.T) {
 		input := `[12,14.56,0,30]`
@@ -91,8 +85,7 @@ func TestToDataFrame(t *testing.T) {
 		gotFrame, err := gframer.ToDataFrame(out, options)
 		require.Nil(t, err)
 		require.NotNil(t, gotFrame)
-		err = experimental.CheckGoldenFrame("testdata/structs/"+strings.ReplaceAll(t.Name(), "TestToDataFrame/", "")+".golden.txt", gotFrame, updateGoldenText)
-		require.Nil(t, err)
+		experimental.CheckGoldenJSONFrame(t, "testdata", "structs/"+strings.ReplaceAll(t.Name(), "TestToDataFrame/", ""), gotFrame, updateGoldenText)
 	})
 	t.Run("array-inside-array", func(t *testing.T) {
 		input := `[["one","two"],["three"]]`
@@ -103,8 +96,7 @@ func TestToDataFrame(t *testing.T) {
 		gotFrame, err := gframer.ToDataFrame(out, options)
 		require.Nil(t, err)
 		require.NotNil(t, gotFrame)
-		err = experimental.CheckGoldenFrame("testdata/structs/"+strings.ReplaceAll(t.Name(), "TestToDataFrame/", "")+".golden.txt", gotFrame, updateGoldenText)
-		require.Nil(t, err)
+		experimental.CheckGoldenJSONFrame(t, "testdata", "structs/"+strings.ReplaceAll(t.Name(), "TestToDataFrame/", ""), gotFrame, updateGoldenText)
 	})
 	t.Run("all-null-array", func(t *testing.T) {
 		input := `[null,null]`
@@ -115,8 +107,7 @@ func TestToDataFrame(t *testing.T) {
 		gotFrame, err := gframer.ToDataFrame(out, options)
 		require.Nil(t, err)
 		require.NotNil(t, gotFrame)
-		err = experimental.CheckGoldenFrame("testdata/structs/"+strings.ReplaceAll(t.Name(), "TestToDataFrame/", "")+".golden.txt", gotFrame, updateGoldenText)
-		require.Nil(t, err)
+		experimental.CheckGoldenJSONFrame(t, "testdata", "structs/"+strings.ReplaceAll(t.Name(), "TestToDataFrame/", ""), gotFrame, updateGoldenText)
 	})
 }
 

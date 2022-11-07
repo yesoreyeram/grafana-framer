@@ -2,15 +2,14 @@
 //  
 //  Frame[0] 
 //  Name: 
-//  Dimensions: 1 Fields by 2 Rows
-//  +-----------------+
-//  | Name:           |
-//  | Labels:         |
-//  | Type: []*string |
-//  +-----------------+
-//  | foo             |
-//  | bar             |
-//  +-----------------+
+//  Dimensions: 1 Fields by 1 Rows
+//  +------------------+
+//  | Name:            |
+//  | Labels:          |
+//  | Type: []*float64 |
+//  +------------------+
+//  | 9.6              |
+//  +------------------+
 //  
 //  
 //  🌟 This was machine generated.  Do not edit. 🌟
@@ -21,9 +20,9 @@
       "schema": {
         "fields": [
           {
-            "type": "string",
+            "type": "number",
             "typeInfo": {
-              "frame": "string",
+              "frame": "float64",
               "nullable": true
             }
           }
@@ -32,8 +31,7 @@
       "data": {
         "values": [
           [
-            "foo",
-            "bar"
+            9.6
           ]
         ]
       }

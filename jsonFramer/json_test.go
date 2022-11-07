@@ -194,6 +194,36 @@ func TestJsonStringToFrame(t *testing.T) {
 				{Selector: "baz", Type: "timestamp_epoch_s"},
 			},
 		},
+		{
+			name: "string with jsonata",
+			responseString: `{
+				"sss": [
+					{ "foo" : "1.2", "bar1": 4, "baz" : true },
+					{ "foo" : "3", "bar1": 5.6, "baz" : false }
+				]
+			}`,
+			rootSelector: "sss.foo",
+		},
+		{
+			name: "string with jsonata numbers",
+			responseString: `{
+				"sss": [
+					{ "foo" : "1.2", "bar1": 4, "baz" : true },
+					{ "foo" : "3", "bar1": 5.6, "baz" : false }
+				]
+			}`,
+			rootSelector: "sss.bar1",
+		},
+		{
+			name: "string with jsonata summarize",
+			responseString: `{
+				"sss": [
+					{ "foo" : "1.2", "bar1": 4, "baz" : true },
+					{ "foo" : "3", "bar1": 5.6, "baz" : false }
+				]
+			}`,
+			rootSelector: "$sum(sss.bar1)",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

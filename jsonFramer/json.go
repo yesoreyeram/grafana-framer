@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/blues/jsonata-go"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 	"github.com/tidwall/gjson"
 	"github.com/yesoreyeram/grafana-framer/gframer"
@@ -49,19 +50,42 @@ func JsonStringToFrame(jsonString string, options JSONFramerOptions) (frame *dat
 		}
 		return getFrameFromResponseString(outString, options)
 	default:
-		if options.RootSelector != "" {
-			r := gjson.Get(string(jsonString), options.RootSelector)
-			if !r.Exists() {
-				return frame, errors.New("root object doesn't exist in the response. Root selector:" + options.RootSelector)
-			}
-			outString = r.String()
+		outString, err := GetRootData(jsonString, options.RootSelector)
+		if err != nil {
+			return frame, err
 		}
 		outString, err = getColumnValuesFromResponseString(outString, options.Columns)
 		if err != nil {
 			return frame, err
 		}
+		return getFrameFromResponseString(outString, options)
 	}
-	return getFrameFromResponseString(outString, options)
+	return getFrameFromResponseString(jsonString, options)
+}
+
+func GetRootData(jsonString string, rootSelector string) (string, error) {
+	if rootSelector != "" {
+		r := gjson.Get(string(jsonString), rootSelector)
+		if r.Exists() {
+			return r.String(), nil
+		}
+		if e := jsonata.MustCompile(rootSelector); e != nil {
+			var data interface{}
+			err := json.Unmarshal([]byte(jsonString), &data)
+			if err != nil {
+				return "", err
+			}
+			if res, err := e.Eval(data); err == nil {
+				if r, err := json.Marshal(res); err == nil {
+					return string(r), nil
+				}
+			}
+		}
+		return "", errors.New("root object doesn't exist in the response. Root selector:" + rootSelector)
+
+	}
+	return jsonString, nil
+
 }
 
 func getColumnValuesFromResponseString(responseString string, columns []ColumnSelector) (string, error) {

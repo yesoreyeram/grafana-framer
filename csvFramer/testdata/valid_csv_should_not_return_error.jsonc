@@ -2,14 +2,15 @@
 //  
 //  Frame[0] 
 //  Name: 
-//  Dimensions: 3 Fields by 2 Rows
+//  Dimensions: 3 Fields by 3 Rows
 //  +-----------------+-----------------+-----------------+
-//  | Name: bar       | Name: baz       | Name: foo       |
+//  | Name: a         | Name: b         | Name: c         |
 //  | Labels:         | Labels:         | Labels:         |
 //  | Type: []*string | Type: []*string | Type: []*string |
 //  +-----------------+-----------------+-----------------+
-//  | 4               | true            | 1.2             |
-//  | 5.6             | false           | 3               |
+//  | 1               | 2               | 3               |
+//  | 11              | 12              | 13              |
+//  | 21              | 22              | 23              |
 //  +-----------------+-----------------+-----------------+
 //  
 //  
@@ -21,7 +22,7 @@
       "schema": {
         "fields": [
           {
-            "name": "bar",
+            "name": "a",
             "type": "string",
             "typeInfo": {
               "frame": "string",
@@ -29,7 +30,7 @@
             }
           },
           {
-            "name": "baz",
+            "name": "b",
             "type": "string",
             "typeInfo": {
               "frame": "string",
@@ -37,7 +38,7 @@
             }
           },
           {
-            "name": "foo",
+            "name": "c",
             "type": "string",
             "typeInfo": {
               "frame": "string",
@@ -49,16 +50,19 @@
       "data": {
         "values": [
           [
-            "4",
-            "5.6"
+            "1",
+            "11",
+            "21"
           ],
           [
-            "true",
-            "false"
+            "2",
+            "12",
+            "22"
           ],
           [
-            "1.2",
-            "3"
+            "3",
+            "13",
+            "23"
           ]
         ]
       }
