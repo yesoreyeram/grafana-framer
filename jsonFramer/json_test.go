@@ -1,7 +1,9 @@
 package jsonFramer_test
 
 import (
+	"encoding/json"
 	"errors"
+	"io/ioutil"
 	"strings"
 	"testing"
 
@@ -243,4 +245,25 @@ func TestJsonStringToFrame(t *testing.T) {
 			experimental.CheckGoldenJSONFrame(t, "testdata", goldenFileName, gotFrame, updateTestData)
 		})
 	}
+}
+
+func TestAzureFrame(t *testing.T) {
+	fileContent, err := ioutil.ReadFile("./testdata/azure/cost-management-daily.json")
+	require.Nil(t, err)
+	options := jsonFramer.JSONFramerOptions{
+		RootSelector: "properties.rows",
+		Columns: []jsonFramer.ColumnSelector{
+			{Selector: "0", Type: "number"},
+			{Selector: "1", Type: "number"},
+			{Selector: "2", Type: "timestamp", TimeFormat: "20060102"},
+			{Selector: "3"},
+		},
+	}
+	var out interface{}
+	err = json.Unmarshal(fileContent, &out)
+	require.Nil(t, err)
+	gotFrame, err := jsonFramer.JsonStringToFrame(string(fileContent), options)
+	require.Nil(t, err)
+	require.NotNil(t, gotFrame)
+	experimental.CheckGoldenJSONFrame(t, "testdata/azure", "cost-management-daily", gotFrame, false)
 }

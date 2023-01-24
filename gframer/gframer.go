@@ -188,8 +188,12 @@ func sliceToFrame(name string, input []interface{}, options FramerOptions) (fram
 												currentValue := o[i]
 												switch a := currentValue.(type) {
 												case float64:
-													if v := fmt.Sprintf("%v", currentValue); v != "" {
-														if t, err := time.Parse("2006", v); err == nil {
+													if v := fmt.Sprintf("%.0f", currentValue); v != "" {
+														format := "2006"
+														if c.TimeFormat != "" {
+															format = c.TimeFormat
+														}
+														if t, err := time.Parse(format, v); err == nil {
 															field.Set(i, ToPointer(t))
 														}
 													}
